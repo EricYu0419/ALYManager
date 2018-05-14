@@ -2,14 +2,21 @@ $topnav-background-color: #222;
 :host {
     .navbar {
         background-color: $topnav-background-color;
+        line-height: 1.5;
+        
         .navbar-brand {
             color: #fff;
+            width: 205px;
+            padding: 0 1rem;
         }
         .nav-item > a {
             color: #999;
             &:hover {
                 color: #fff;
             }
+        }
+        .nav-toggle {
+            line-height: 1.5;
         }
     }
     .messages {

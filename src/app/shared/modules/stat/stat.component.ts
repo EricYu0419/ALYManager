@@ -1,4 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { TranslateService } from "@ngx-translate/core";
 
 @Component({
     selector: 'app-stat',
@@ -13,7 +14,24 @@ export class StatComponent implements OnInit {
     @Input() data: number;
     @Output() event: EventEmitter<any> = new EventEmitter();
 
-    constructor() {}
+    constructor(private translate: TranslateService) {
+        console.info(translate);
+        this.translate.addLangs([
+            "en",
+            "fr",
+            "ur",
+            "es",
+            "it",
+            "fa",
+            "de",
+            "zh"
+        ]);
+        this.translate.setDefaultLang("zh");
+        const browserLang = this.translate.getBrowserLang();
+        this.translate.use(
+            browserLang.match(/en|fr|ur|es|it|fa|de|zh/) ? browserLang : "zh"
+        );
+    }
 
     ngOnInit() {}
 }
