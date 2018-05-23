@@ -1,0 +1,60 @@
+<div class="btn-group">
+  <button class="btn btn-sm btn-warning" (click)="openConverteip(converteip)" *ngIf="Instance.HasPublicIp&&!Instance.IsEip&&Instance.InstanceNetworkType==='vpc'">转为EIP</button>
+  <button class="btn btn-sm btn-danger" (click)="openConvertpip(convertpip)" *ngIf="Instance.HasPublicIp&&Instance.IsEip&&Instance.InstanceNetworkType==='vpc'">解绑EIP</button>
+</div>
+<!-- Modal -->
+<ng-template #converteip let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title">实例由公网IP转为弹性IP（EIP）：
+      <br>
+      <span class="text-small">{{ Instance.HostName }}&nbsp;
+        <span class="text-danger">({{Instance.InstanceName}})</span>&nbsp;
+        <span class="text-info">{{Instance.PublicIpAddress.IpAddress[0]}}</span>
+      </span>
+    </h4>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <ul class="list-group text-sm">
+      <li class="list-group-item">仅支持 VPC 网络类型的 ECS 实例。</li>
+      <li class="list-group-item">仅支持状态为 已停止（Stopped）或者 运行中（Running）的 ECS 实例。</li>
+      <li class="list-group-item">不支持公网带宽为 0 Mbps 的 ECS 实例，即该 ECS 实例没有分配公网 IP（NatPublicIp）。</li>
+      <li class="list-group-item">不支持已经绑定了 EIP 的 ECS 实例。</li>
+      <li class="list-group-item">不支持有未生效的变更配置任务 ECS 实例。</li>
+      <li class="list-group-item">不支持即将在 24 小时内到期的 ECS 实例。</li>
+      <li class="list-group-item">公网 IP（NatPublicIp）转换为 EIP 后，EIP 将单独计费，EIP 的计费方式参阅文档 EIP 计费说明。</li>
+      <li class="list-group-item">不支持 公网带宽 为 按固定带宽计费 的 包年包月 ECS 实例。</li>
+    </ul>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outlet-light" (click)="c('Close click')">关闭</button>
+    <button type="button" class="btn btn-primary" (click)="c('doConverteip')">确定</button>
+  </div>
+</ng-template>
+
+
+<ng-template #convertpip let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title">实例解绑弹性IP（EIP）：
+      <br>
+      <span class="text-small">{{ Instance.HostName }}&nbsp;
+        <span class="text-danger">({{Instance.InstanceName}})</span>&nbsp;
+        <span class="text-info">{{Instance.EipAddress.IpAddress}}</span>
+      </span>
+    </h4>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <ul class="list-group text-sm">
+      <li class="list-group-item">解除EIP与云产品实例的绑定关系。</li>
+    </ul>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outlet-light" (click)="c('Close click')">关闭</button>
+    <button type="button" class="btn btn-primary" (click)="c('doConvertpip')">确定</button>
+  </div>
+</ng-template>

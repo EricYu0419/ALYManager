@@ -30,5 +30,7 @@
     "In queue" : "队列中",
     "Mail" : "邮件",
     "View All" : "查看所有",
-    "Ecs":"虚拟机"
+    "Ecs":"云虚拟机（ECS）",
+    "Ess":"弹性伸缩（ESS）",
+    "Eip":"弹性公网（EIP）"
 }

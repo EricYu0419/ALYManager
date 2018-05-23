@@ -4,7 +4,7 @@
     "license": "Apache",
     "scripts": {
         "ng": "ng",
-        "start": "ng serve",
+        "start": "ng serve --open",
         "build": "ng build --prod",
         "gitbuild": "ng build --prod --base-href /start-angular/SB-Admin-BS4-Angular-6/master/dist/",
         "test": "ng test",
@@ -28,6 +28,7 @@
         "chart.js": "^2.7.2",
         "core-js": "^2.5.5",
         "font-awesome": "^4.7.0",
+        "moment": "^2.22.1",
         "ng2-charts": "^1.6.0",
         "rxjs": "^6.1.0",
         "yarn": "^1.6.0",

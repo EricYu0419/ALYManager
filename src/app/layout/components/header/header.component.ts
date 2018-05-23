@@ -25,7 +25,6 @@ export class HeaderComponent implements OnInit {
         ]);
         this.translate.setDefaultLang("zh");
         const browserLang = this.translate.getBrowserLang();
-        console.info(browserLang);
         this.translate.use(
             browserLang.match(/en|fr|ur|es|it|fa|de|zh/)
                 ? browserLang
@@ -64,7 +63,9 @@ export class HeaderComponent implements OnInit {
     }
 
     onLoggedout() {
-        localStorage.removeItem("isLoggedin");
+        localStorage.removeItem("username");
+        localStorage.removeItem("role");
+        localStorage.removeItem("token");
     }
 
     changeLang(language: string) {

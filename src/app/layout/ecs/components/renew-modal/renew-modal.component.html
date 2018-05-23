@@ -1,0 +1,51 @@
+<button class="btn btn-sm btn-primary" (click)="openRenew(renew)" *ngIf="Instance.InstanceChargeType==='PrePaid'">续费</button>
+<!-- Modal -->
+<ng-template #renew let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title">续费实例：
+      <span class="text-small">{{ Instance.HostName }}&nbsp;
+        <span class="text-danger">({{Instance.InstanceName}})</span>&nbsp;
+        <span class="text-info">{{Instance.PublicIpAddress.IpAddress[0]}}</span>
+      </span>
+    </h4>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form role="form">
+      <fieldset class="form-group">
+        <label>续费时长类型</label>
+        <select class="form-control" [(ngModel)]="RenewInstance.PeriodUnit" name="periodUnit">
+          <!-- <option value="Week">按周续费</option> -->
+          <option value="Month">按月续费</option>
+        </select>
+      </fieldset>
+
+      <fieldset class="form-group">
+        <label>续费时长</label>
+        <select class="form-control" [(ngModel)]="RenewInstance.Period" name="period">
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+            <option>4</option>
+            
+            <option *ngIf="RenewInstance.PeriodUnit==='month'">5</option>
+            <option *ngIf="RenewInstance.PeriodUnit==='month'">6</option>
+            <option *ngIf="RenewInstance.PeriodUnit==='month'">7</option>
+            <option *ngIf="RenewInstance.PeriodUnit==='month'">8</option>
+            <option *ngIf="RenewInstance.PeriodUnit==='month'">9</option>
+            <option *ngIf="RenewInstance.PeriodUnit==='month'">12</option>
+            <option *ngIf="RenewInstance.PeriodUnit==='month'">24</option>
+            <option *ngIf="RenewInstance.PeriodUnit==='month'">36</option>
+            <option *ngIf="RenewInstance.PeriodUnit==='month'">48</option>
+            <option *ngIf="RenewInstance.PeriodUnit==='month'">60</option>
+          </select>
+      </fieldset>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outlet-light" (click)="c('Close click')">关闭</button>
+    <button type="button" class="btn btn-primary" (click)="c('confirm')">确定</button>
+  </div>
+</ng-template>

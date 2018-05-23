@@ -12,7 +12,6 @@ export class PageHeaderComponent implements OnInit {
     @Input() icon: string;
 
     constructor(private translate: TranslateService) {
-        console.info(translate);
         this.translate.addLangs([
             "en",
             "fr",

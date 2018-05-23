@@ -1,0 +1,127 @@
+<div [@routerTransition]>
+  <app-page-header [heading]="'Ess'" [icon]="'fa-arrows-v'"></app-page-header>
+  <ngb-tabset (tabChange)="tabChange($event)">
+    <ngb-tab title="伸缩组列表" id="group">
+      <ng-template ngbTabContent>
+        <table class="card-body table table-dark table-striped">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>地域</th>
+              <th>组名称</th>
+              <td>生效配置</td>
+              <th>状态</th>
+              <th>最小 / 最大</th>
+              <th>当前 / 待入 / 待出</th>
+              <th>冷却时间（秒）</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody *ngIf="loading">
+            <tr>
+              <td colspan=10>
+                <app-loading></app-loading>
+              </td>
+            </tr>
+          </tbody>
+          <tbody *ngIf="!loading">
+            <tr class="text-sm" *ngFor="let group of scope.ScalingGroups;index as i">
+              <td class="text-nor">{{ i+1 }}</td>
+              <td>{{ getRegionInfo(group.RegionId).LocalName }}
+                <br>({{group.RegionId}})</td>
+              <td>{{ group.ScalingGroupName }}
+                <br>({{ group.ScalingGroupId }})</td>
+              <td>{{ group.ActiveScalingConfiguration.ScalingConfigurationName }}
+                <br>({{ group.ActiveScalingConfiguration.ScalingConfigurationId }})
+              </td>
+              <td class="{{ getLifecycleStateClass(group) }} ">
+                <i class="fa {{ getLifecycleStateIcon(group) }}" aria-hidden="true"></i>&nbsp;{{ getLifecycleStateDesc(group) }}</td>
+              <td class="text-nor">
+                {{ group.MinSize }} / {{ group.MaxSize }}
+              </td>
+              <td class="text-nor">
+                {{ group.TotalCapacity }} / {{ group.PendingCapacity }} / {{ group.RemovingCapacity }}
+              </td>
+              <td class="text-nor">{{ group.DefaultCooldown }}</td>
+              <td>
+                <div ngbDropdown placement="top-right" class="d-inline-block dropdown">
+                  <button class="btn btn-sm btn-primary" id="execRule" ngbDropdownToggle>执行</button>
+                  <div ngbDropdownMenu>
+                    <button class="dropdown-item text-sm" *ngFor="let rule of group.Rules" (click)="doRule(rule);">{{rule.ScalingRuleName}}</button>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </ng-template>
+    </ngb-tab>
+    <ngb-tab id="config">
+      <ng-template ngbTabTitle class="bg-dark text-light">
+        伸缩配置列表 </ng-template>
+      <ng-template ngbTabContent>
+        <table class="table table-dark table-striped">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>地域</th>
+              <th>组名</th>
+              <th>配置</th>
+              <th>状态</th>
+              <th>镜像</th>
+              <th>带宽</th>
+              <th>系统盘</th>
+              <th>实例类型</th>
+              <th>操作</th>
+            </tr>
+          </thead>
+          <tbody *ngIf="loading">
+            <tr>
+              <td colspan=10>
+                <app-loading></app-loading>
+              </td>
+            </tr>
+          </tbody>
+          <tbody *ngIf="!loading">
+            <tr class="text-sm" *ngFor="let config of scope.ScalingConfigurations;index as i">
+              <td class="text-nor">{{ i+1 }}</td>
+              <td>{{ getRegionInfo(getScalingGroup(config.ScalingGroupId).RegionId).LocalName }}
+                <br>({{getScalingGroup(config.ScalingGroupId).RegionId}})</td>
+              <td>{{ getScalingGroup(config.ScalingGroupId).ScalingGroupName }}
+                <br>({{ config.ScalingGroupId }})</td>
+              <td>{{ config.ScalingConfigurationName }}
+                <br>({{ config.ScalingConfigurationId }})
+              </td>
+              <td class="{{ getLifecycleStateClass(config) }} ">
+                <i class="fa {{ getLifecycleStateIcon(config) }}" aria-hidden="true"></i>&nbsp;{{ getLifecycleStateDesc(config) }}</td>
+              <td>{{getImageInfo(config).ImageName}}
+                <br>({{getImageInfo(config).OSName}})</td>
+              <td>{{config.InternetMaxBandwidthOut}}M
+                <br>({{ getInternetChargeTypeInfo(config.InternetChargeType)}})</td>
+              <td>{{config.SystemDiskSize||40}}G
+                <br>({{getDiskCategory(config.SystemDiskCategory)}})</td>
+              <td>
+                {{getInstanceTypeInfo(config).InstanceTypeId}}
+                <br>({{getInstanceTypeInfo(config).CpuCoreCount}}vcpu,{{getInstanceTypeInfo(config).MemorySize}}G)
+              </td>
+
+            </tr>
+          </tbody>
+        </table>
+      </ng-template>
+    </ngb-tab>
+    <ngb-tab title="伸缩规则列表" id="rule">
+      <ng-template ngbTabContent>
+        <p>Raw denim you probably haven't heard of them jean shorts Austin. Nesciunt tofu stumptown aliqua, retro synth master
+          cleanse. Mustache cliche tempor, williamsburg carles vegan helvetica. Reprehenderit butcher retro keffiyeh dreamcatcher
+          synth. Cosby sweater eu banh mi, qui irure terry richardson ex squid. Aliquip placeat salvia cillum iphone. Seitan
+          aliquip quis cardigan american apparel, butcher voluptate nisi qui.</p>
+      </ng-template>
+    </ngb-tab>
+    <ngb-tab title="伸缩活动列表" id="history">
+      <ng-template ngbTabContent>
+        123
+      </ng-template>
+    </ngb-tab>
+  </ngb-tabset>
+</div>

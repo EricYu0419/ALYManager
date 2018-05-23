@@ -1,0 +1,65 @@
+<button class="btn btn-sm btn-info" (click)="open(content)">监控</button>
+<!-- Modal -->
+<ng-template #content let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title">查询实例监控信息：
+      <span class="text-small">{{ Instance.HostName }}&nbsp;
+        <span class="text-danger">({{Instance.InstanceName}})</span>&nbsp;
+        <span class="text-info">{{Instance.PublicIpAddress.IpAddress[0]}}</span>
+      </span>
+    </h4>
+    <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form class="padding-bottom-15">
+      <label for="datespan">时间范围：</label>
+      <div class="form-inline form-sm" id="datespan">
+        <input class="form-control" width="112px" placeholder="yyyy-mm-dd" name="startDate" [(ngModel)]="search.start.date" ngbDatepicker
+          #dStart="ngbDatepicker">
+        <button class="input-group-addon" (click)="dStart.toggle()" type="button">
+          <!-- <img src="img/calendar-icon.svg" style="width: 1.2rem; height: 1rem; cursor: pointer;"/> -->
+          <span class="fa fa-calendar"></span>
+        </button>
+        <ngb-timepicker [(ngModel)]="search.start.time" name="startTime"></ngb-timepicker>
+        至
+        <input class="form-control" width="112px" placeholder="yyyy-mm-dd" name="endDate" [(ngModel)]="search.end.date" ngbDatepicker
+          #dEnd="ngbDatepicker">
+        <button class="input-group-addon" (click)="dEnd.toggle()" type="button">
+          <!-- <img src="img/calendar-icon.svg" style="width: 1.2rem; height: 1rem; cursor: pointer;"/> -->
+          <span class="fa fa-calendar"></span>
+        </button>
+        <ngb-timepicker [(ngModel)]="search.end.time" name="endTime"></ngb-timepicker>
+
+      </div>
+      <label>时间间隔：</label>
+      <select class="form-control" [(ngModel)]="search.Period" name="period">
+        <option value="60">每分钟</option>
+        <option value="600">每10分钟</option>
+        <option value="3600">每小时</option>
+      </select>
+      <div class="text-center my-3">
+        <button type="button" class="btn btn-primary" (click)="query()">搜索</button>
+      </div>
+    </form>
+    <app-loading *ngIf="loading"></app-loading>
+    <div class="rows" *ngIf="lineArray&&lineArray.length>0">
+      <div class="col-lg-12 col-md-12" *ngFor="let lineObj of lineArray">
+        <div class="card mb-3">
+          <div class="card-header">
+            {{ lineObj.title }}
+          </div>
+          <div class="card-body">
+            <canvas baseChart height="130" [datasets]="lineObj.data" [labels]="lineObj.labels" [options]="lineObj.options" [legend]="lineObj.legend"
+              [chartType]="lineObj.type" [colors]="lineObj.color" (chartHover)="chartHovered($event)" (chartClick)="chartClicked($event)">
+            </canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outlet-light" (click)="c('Close click')">关闭</button>
+  </div>
+</ng-template>

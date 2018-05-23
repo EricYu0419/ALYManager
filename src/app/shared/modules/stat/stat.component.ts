@@ -15,7 +15,6 @@ export class StatComponent implements OnInit {
     @Output() event: EventEmitter<any> = new EventEmitter();
 
     constructor(private translate: TranslateService) {
-        console.info(translate);
         this.translate.addLangs([
             "en",
             "fr",

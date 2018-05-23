@@ -1,4 +1,88 @@
 <div [@routerTransition]>
   <app-page-header [heading]="'Ecs'" [icon]="'fa-server'"></app-page-header>
- 
+  <div class="card mb-3">
+    <h4 class="card-header">
+      虚拟机列表
+      <div class="float-right">
+        <button class="btn btn-sm btn-primary mr-1" (click)="dataBind()">刷新</button>
+        <app-instance-modal [(Regions)]="scope.Regions"></app-instance-modal>
+      </div>
+    </h4>
+    <div class="card-body table-responsive ">
+      <table class="table table-dark table-striped">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>地域</th>
+            <th>配置(C:Cpu核心数,M:内存)</th>
+            <th>类型</th>
+            <th>网络(IpAddress)</th>
+            <th>名称</th>
+            <th>时间</th>
+            <th>状态</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody *ngIf="loading">
+          <tr>
+            <td colspan=10>
+              <app-loading></app-loading>
+            </td>
+          </tr>
+        </tbody>
+        <tbody *ngIf="!loading && scope.Instances && scope.Instances.length>0">
+          <tr *ngFor="let Instance of scope.Instances;index as i" class="text-small">
+            <td>{{ i+1 }}</td>
+            <td>{{ getLocalInfo(Instance).LocalName }}
+              <br/>({{ getLocalInfo(Instance).ZoneId }})</td>
+            <td>{{ getInstanceTypeInfo(Instance) }}
+              <br/>{{ getImageInfo(Instance) }}
+            </td>
+            <td>{{ getInstanceChargeTypeInfo(Instance) }}
+              <br/>{{ getInternetChargeTypeInfo(Instance) }}</td>
+            <td>{{(Instance.InstanceNetworkType==='vpc'?'专有网络':'经典网络')+(Instance.IsEip?' 弹性IP':'')}}
+              <span class="text-primary" *ngIf="Instance.HasPublicIp&&Instance.IsEip">({{ Instance.EipAddress.IpAddress }})</span>
+              <span class="text-info" *ngIf="Instance.HasPublicIp&&!Instance.IsEip">({{ Instance.PublicIpAddress.IpAddress[0] }})</span>
+              <span class="text-success" *ngIf="Instance.InstanceNetworkType==='vpc'">
+                <br/>({{ Instance.VpcAttributes.PrivateIpAddress.IpAddress[0] }})</span>
+            </td>
+            <td>{{ Instance.HostName }}
+              <br/>
+              <span class="text-info">({{ Instance.InstanceName }})</span>
+            </td>
+            <td>
+              创建：{{ Instance.CreationTime | date:"yyyy-MM-dd"}}
+              <br/>
+              <span *ngIf="Instance.InstanceChargeType!=='PostPaid'" [ngClass]="getExpireWarning(Instance)">过期：{{ Instance.ExpiredTime | date:"yyyy-MM-dd"}}</span>
+            </td>
+            <td title="上次开始时间和当前状态">{{ Instance.StartTime | date:"yyyy-MM-dd" }}
+              <br/>
+              <span [ngClass]="getStatusClass(Instance)">
+                <i class="fa {{ getStatusIcon(Instance) }}"></i> {{ getStatusDesc(Instance) }}</span>
+            </td>
+            <td>
+              <div class="btn-group">
+                <app-monitor-modal [Instance]="Instance"></app-monitor-modal>
+                <button class="btn btn-sm btn-warning" (click)="rebootECS(Instance.InstanceId)" *ngIf="Instance.Status!=='Stopped'" [disabled]="Instance.Status==='Starting'||Instance.Status==='Stopping'">重启</button>
+                <button class="btn btn-sm btn-danger" (click)="stopECS(Instance.InstanceId)" *ngIf="Instance.Status!=='Stopped'" [disabled]="Instance.Status==='Starting'||Instance.Status==='Stopping'">停止</button>
+                <button class="btn btn-sm btn-success" (click)="startECS(Instance.InstanceId)" *ngIf="Instance.Status!=='Running'" [disabled]="Instance.Status==='Starting'||Instance.Status==='Stopping'">启动</button>
+                <div ngbDropdown placement="top-right" class="d-inline-block dropdown">
+                  <button class="btn btn-sm btn-primary" ngbDropdownToggle *ngIf="!Instance.HasPublicIp">绑EIP</button>
+                  <ul ngbDropdownMenu>
+                    <li *ngFor="let eip of getRegionEips(Instance)">
+                      <button class="dropdown-item text-sm" (click)="doBindEip(eip,Instance);">{{eip.IpAddress}}</button>
+                    </li>
+                  </ul>
+                </div>
+                <app-converteip-modal [Instance]="Instance"></app-converteip-modal>
+                <button title="先停止，再释放" (click)="deleteECS(Instance.InstanceId)" *ngIf="Instance.InstanceChargeType!=='PrePaid'" [disabled]="Instance.Status!=='Stop'"
+                  class="btn btn-sm btn-danger">释放</button>
+                <app-renew-modal [Instance]="Instance"></app-renew-modal>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>
