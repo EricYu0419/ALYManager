@@ -1,6 +1,8 @@
 <div [@routerTransition]>
-    <h2 class="text-muted">Dashboard <small>Statistics Overview</small></h2>
-    <div class="row">
+    <h2 class="text-muted">Dashboard
+        <small>Statistics Overview</small>
+    </h2>
+    <div class="row" *ngIf="false">
         <div class="col-md-12">
             <ngb-carousel>
                 <ng-template ngbSlide *ngFor="let slider of sliders">
@@ -14,24 +16,44 @@
         </div>
     </div>
     <hr>
-    <div class="row">
+    <div class="row" *ngIf="false">
         <div class="col-xl-3 col-lg-6">
-            <app-stat [bgClass]="'primary'" [icon]="'fa-comments'" [count]="26" [label]="'New Comments!'" ></app-stat>
+            <app-stat [bgClass]="'primary'" [icon]="'fa-comments'" [count]="26" [label]="'New Comments!'"></app-stat>
         </div>
         <div class="col-xl-3 col-lg-6">
-            <app-stat [bgClass]="'warning'" [icon]="'fa-tasks'" [count]="12" [label]="'New task!'" ></app-stat>
+            <app-stat [bgClass]="'warning'" [icon]="'fa-tasks'" [count]="12" [label]="'New task!'"></app-stat>
         </div>
         <div class="col-xl-3 col-lg-6">
-            <app-stat [bgClass]="'success'" [icon]="'fa-shopping-cart'" [count]="124" [label]="'New Orders!'" ></app-stat>
+            <app-stat [bgClass]="'success'" [icon]="'fa-shopping-cart'" [count]="124" [label]="'New Orders!'"></app-stat>
         </div>
         <div class="col-xl-3 col-lg-6">
             <app-stat [bgClass]="'danger'" [icon]="'fa-support'" [count]="13" [label]="'New Tickets!'"></app-stat>
         </div>
     </div>
-    <hr />
-    <ngb-alert [type]="alert.type" (close)="closeAlert(alert)" *ngFor="let alert of alerts">{{ alert.message }}</ngb-alert>
-    <hr />
-    <div class="row">
+    <div class="card mb-3">
+        <h4 class="card-header">
+            <i class="fa fa-heartbeat" aria-hidden="true"></i> 服务器状态列表
+            <div class="float-right">
+                <button class="btn btn-primary" (click)="dataBind()">刷新</button>
+            </div>
+        </h4>
+        <div class="card-body">
+            <div *ngIf="loading">
+                <app-loading></app-loading>
+            </div>
+            <ul class="list-group" *ngIf="scope.PingInfos.length>0">
+                <li class="list-group-item list-group-item-{{ info.pingInfo.noIp?'primary':info.pingInfo.alive?'success':'danger'}}" *ngFor="let info of scope.PingInfos">
+                    <div class="row" [title]="info.pingInfo.output">
+                        <div class="col-sm-5 col-md-5 col-lg-5">{{ info.InstanceName }}（{{getRegionInfo(info.InstanceId)}}）</div>
+                        <div class="col-sm-3 col-md-3 col-lg-3">{{ info.IpAddress }}</div>
+                        <div class="col-sm-2 col-md-2 col-lg-2">{{ info.pingInfo.noIp?'无公网IP':info.pingInfo.alive?'活跃':'非活跃' }}</div>
+                        <div class="col-sm-2 col-md-2 col-lg-2">{{ info.pingInfo.alive?info.pingInfo.time+'ms':'' }}</div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="row" *ngIf="false">
         <div class="col-lg-8">
             <div class="card card-default">
                 <div class="card-header">

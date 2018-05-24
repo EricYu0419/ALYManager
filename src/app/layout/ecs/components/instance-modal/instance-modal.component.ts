@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, Output } from "@angular/core";
 import { Region, EipAddress, ApifetchService } from "../../../../shared";
 import { NgbModal, ModalDismissReasons } from "@ng-bootstrap/ng-bootstrap";
+import { SnotifyService } from "ng-snotify";
 
 @Component({
     selector: "app-instance-modal",
@@ -18,7 +19,7 @@ export class InstanceModalComponent implements OnInit {
         Bandwidth: number;
         InternetChargeType: string;
     };
-    constructor(private modalService: NgbModal, private api: ApifetchService) {}
+    constructor(private modalService: NgbModal, private api: ApifetchService,private snotify:SnotifyService) {}
 
     ngOnInit() {
         this.eipOptions = {
@@ -61,7 +62,7 @@ export class InstanceModalComponent implements OnInit {
                             (err, res) => {
                                 if (res.RequestId) {
                                     this.api.v1Tasks('EipAddressesReflash');
-                                    alert("新EIP申请成功，请等待后台刷新更新！");
+                                    this.snotify.success("新EIP申请成功，请等待后台刷新更新！");
                                 }
                             }
                         );

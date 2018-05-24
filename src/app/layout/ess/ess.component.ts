@@ -13,7 +13,7 @@ import {
     ScalingConfiguration,
     ScalingRule
 } from "../../shared";
-
+import { SnotifyService } from "ng-snotify";
 @Component({
     selector: "app-ess",
     templateUrl: "./ess.component.html",
@@ -29,7 +29,7 @@ export class EssComponent implements OnInit {
         ScalingRules: Array<ScalingRule>;
     };
     loading: boolean = false;
-    constructor(private api: ApifetchService) {
+    constructor(private api: ApifetchService, private snotify: SnotifyService) {
         this.scope = {
             ScalingGroups: [],
             Regions: [],
@@ -80,18 +80,19 @@ export class EssComponent implements OnInit {
         let ruleId = rule.ScalingRuleId;
         this.api.do(
             "/ess/executeScalingRule",
-            { ScalingRuleAri: rule.ScalingRuleAri},
+            { ScalingRuleAri: rule.ScalingRuleAri },
             (err, res) => {
                 if (res.RequestId) {
-                    this.api.v1Tasks('InstanceStatusReflash');
-                    this.api.v1Tasks('ScalingInstanceReflash');
-                    alert(
-                        `ScalingActivityId:${
-                            res.ScalingActivityId
-                        } create success`
+                    this.api.v1Tasks("InstanceStatusReflash");
+                    this.api.v1Tasks("ScalingInstanceReflash");
+                    this.api.v1Tasks("ScalingAllReflash");
+                    this.snotify.success(
+                        `伸缩规则【${
+                            rule.ScalingRuleName
+                        }】执行成功，活动编号：${res.ScalingActivityId}`
                     );
                 } else {
-                    alert(res.code);
+                    this.snotify.error(res.message);
                 }
             }
         );

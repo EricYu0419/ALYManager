@@ -8,7 +8,7 @@
         <app-cardhead-btn-modal [Regions]="scope.Regions"></app-cardhead-btn-modal>
       </div>
     </h4>
-    <div class="card-body table-responsive ">
+    <div class="card-body">
       <table class="table table-dark table-striped">
         <thead>
           <tr>
@@ -43,8 +43,16 @@
               <br/>{{getEipInstanceTypeDesc(eip.InstanceType)}}
             </td>
             <td>
-
+              <div ngbDropdown placement="top-right" class="d-inline-block dropdown">
+                <button class="btn btn-sm btn-primary" ngbDropdownToggle *ngIf="eip.Status==='Available'&&getInstancesByRegionId(eip).length>0">绑到实例</button>
+                <ul ngbDropdownMenu>
+                  <li *ngFor="let instance of getInstancesByRegionId(eip)">
+                    <button class="dropdown-item text-sm" (click)="doBindEIP(eip,instance);">{{instance.InstanceId}}({{instance.InstanceName}})</button>
+                  </li>
+                </ul>
+              </div>
               <button class="btn btn-sm btn-danger" (click)="releaseEIP(eip)" *ngIf="eip.Status==='Available'">释放</button>
+              <button class="btn btn-sm btn-warning" (click)="unBindEIP(eip)" *ngIf="eip.Status==='InUse'">解绑</button>
             </td>
           </tr>
         </tbody>

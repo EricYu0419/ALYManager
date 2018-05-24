@@ -81,6 +81,10 @@ export class ApifetchService {
         return true;
     }
 
+    v1PingList(cb) {
+        return this.do("/client/pingList", null, cb);
+    }
+
     v1EcsList(cb) {
         let url = `${this.baseUri}/client/ecslist`;
         return this.request({ method: "GET", url: url }, cb);

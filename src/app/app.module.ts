@@ -1,15 +1,16 @@
-import { CommonModule } from '@angular/common';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { CommonModule } from "@angular/common";
+import { HttpClient, HttpClientModule } from "@angular/common/http";
+import { NgModule } from "@angular/core";
+import { FormsModule } from "@angular/forms";
+import { BrowserModule } from "@angular/platform-browser";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { TranslateLoader, TranslateModule } from "@ngx-translate/core";
+import { TranslateHttpLoader } from "@ngx-translate/http-loader";
+import { SnotifyModule, SnotifyService, ToastDefaults } from "ng-snotify";
 
-import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
-import { AuthGuard } from './shared';
+import { AppRoutingModule } from "./app-routing.module";
+import { AppComponent } from "./app.component";
+import { AuthGuard } from "./shared";
 
 // AoT requires an exported function for factories
 export const createTranslateLoader = (http: HttpClient) => {
@@ -19,7 +20,7 @@ export const createTranslateLoader = (http: HttpClient) => {
         '/start-angular/SB-Admin-BS4-Angular-6/master/dist/assets/i18n/',
         '.json'
     ); */
-    return new TranslateHttpLoader(http, './assets/i18n/', '.json');
+    return new TranslateHttpLoader(http, "./assets/i18n/", ".json");
 };
 
 @NgModule({
@@ -28,6 +29,7 @@ export const createTranslateLoader = (http: HttpClient) => {
         FormsModule,
         BrowserModule,
         BrowserAnimationsModule,
+        SnotifyModule,
         HttpClientModule,
         TranslateModule.forRoot({
             loader: {
@@ -39,7 +41,11 @@ export const createTranslateLoader = (http: HttpClient) => {
         AppRoutingModule
     ],
     declarations: [AppComponent],
-    providers: [AuthGuard],
+    providers: [
+        AuthGuard,
+        { provide: "SnotifyToastConfig", useValue: ToastDefaults },
+        SnotifyService
+    ],
     bootstrap: [AppComponent]
 })
 export class AppModule {}

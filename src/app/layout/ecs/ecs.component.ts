@@ -10,6 +10,8 @@ import {
     Disk,
     EipAddress
 } from "../../shared";
+import { SnotifyService } from "ng-snotify";
+import { interval, Observable } from "rxjs";
 
 @Component({
     selector: "app-ecs",
@@ -28,8 +30,11 @@ export class EcsComponent implements OnInit {
     };
 
     closeResult: string;
-
-    constructor(private api: ApifetchService) {
+    timer: Observable<number>=interval(30 * 1000);
+    constructor(
+        private api: ApifetchService,
+        private snotifyService: SnotifyService
+    ) {
         this.scopeInit();
     }
 
@@ -44,7 +49,14 @@ export class EcsComponent implements OnInit {
     }
 
     ngOnInit() {
+        // this.timer.subscribe(val => {
+            // this.dataBind();
+            // this.snotifyService.info("自动刷新已完成", "虚拟机列表");
+        // });
         this.dataBind();
+    }
+    ngOnDestroy() {
+        this.timer = null;
     }
 
     dataBind() {
@@ -103,7 +115,9 @@ export class EcsComponent implements OnInit {
                     this.scope.Instances.find(ins => {
                         return ins.InstanceId === instance.InstanceId;
                     }).EipAddress = eip;
-                    alert("绑定成功，请等待后台数据刷新（约1分钟）");
+                    this.snotifyService.info(
+                        "绑定成功，请等待后台数据刷新（约1分钟）"
+                    );
                 }
             }
         );
@@ -131,7 +145,7 @@ export class EcsComponent implements OnInit {
             return img.ImageId === instance.ImageId;
         });
 
-        return `${image.OSName}`;
+        return image?`${image.OSName}`:'';
     }
 
     public getInstanceTypeInfo(instance: Instance): string {

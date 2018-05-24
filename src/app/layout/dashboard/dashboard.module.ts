@@ -9,7 +9,7 @@ import {
     NotificationComponent,
     ChatComponent
 } from './components';
-import { StatModule } from '../../shared';
+import { StatModule,LoadingModule } from '../../shared';
 
 @NgModule({
     imports: [
@@ -17,7 +17,8 @@ import { StatModule } from '../../shared';
         NgbCarouselModule.forRoot(),
         NgbAlertModule.forRoot(),
         DashboardRoutingModule,
-        StatModule
+        StatModule,
+        LoadingModule
     ],
     declarations: [
         DashboardComponent,
